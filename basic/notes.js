@@ -1,5 +1,47 @@
 const fs = require('fs');
-const argv = require('yargs').argv;
+
+const titleOptions ={
+    discribe:'Title of the new note',
+    demand:true,
+    alias:'t'             
+}
+const argv = require('yargs')
+            .command('add','add a new notes',{
+                title:titleOptions,
+                body:{
+                    discribe:'Body of the new note',
+                    demand:true,
+                    alias:'b'
+                }
+            })
+            .command('list','list all notes')
+            .command('read','read a note',{
+                title:titleOptions
+            })
+            .help()
+            .argv;
+
+
+
+// bash-3.2$ node basic/notes.js --help
+// 命令：
+//   add   add a new notes
+//   list  list all notes
+
+// 选项：
+//   --help  显示帮助信息                                                    [布尔]
+
+
+// bash-3.2$ node basic/notes.js add --help
+// basic/notes.js add
+
+// 选项：
+//   --help       显示帮助信息                                               [布尔]
+//   --title, -t                                                             [必需]
+//   --body, -b                                                              [必需]
+
+
+
 const FILENAME='notes.txt';
 const fetchNotes = (fileName)=>{
     try{
