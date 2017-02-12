@@ -18,5 +18,27 @@ module.exports = {
                 }
             });
         }
+    },
+    getWeatherFromLocationPromise:(location)=>{
+        return new Promise((reslove,reject)=>{
+          if(location&&location.lat&&location.lng){
+            request({
+            url:`${WEATHER_API_URL}${location.lat},${location.lng}`,
+            json:true},
+            (err,res,obj)=>{
+                if(err){
+                    reject('Network Failure')
+                    return;
+                }else if(obj.error||(res.statusCode!==200)){
+                    reject('NotFound');
+                    return;
+                }else if(obj.currently){
+                    reslove(obj.currently);
+                }
+            });
+          }else{
+              reject('Location is not correct.');
+          }
+        })
     }
 }

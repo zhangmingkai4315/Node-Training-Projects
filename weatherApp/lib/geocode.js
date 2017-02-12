@@ -21,5 +21,25 @@ module.exports = {
                 });
             }
         });
+    },
+    geoCodeAddressPromise:(address)=>{
+        return new Promise((resolve,reject)=>{
+            let _address = encodeURIComponent(address);
+            request({
+                url:`${GOOGLE_MAP_URL}${_address}`,
+                json:true},
+                (err,res,obj)=>{
+                if(err){
+                    reject('Network Failure')
+                }else if(obj.status == 'ZERO_RESULTS'){
+                    reject('Your search term can not be located!');
+                }else if(obj.status == 'OK'){
+                    resolve({
+                        Address:obj.results[0].formatted_address,
+                        location:obj.results[0].geometry.location
+                    });
+                }
+            });
+        });
     }
 }

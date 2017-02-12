@@ -81,21 +81,30 @@ const argv = require('yargs')
 //    "status" : "OK"
 // }
 
-googleMapApi.geoCodeAddress(argv.address,(err,obj)=>{
-    if(err){
-        console.log(err);
-    }else{
-        console.log(obj);
-        weatherApi.getWeatherFromLocation(obj.location,(err,data)=>{
-            if(err){
-                console.log(err);
-            }else{
-                console.log(data);
-            }
-        });
-    }
-});
+// googleMapApi.geoCodeAddress(argv.address,(err,obj)=>{
+//     if(err){
+//         console.log(err);
+//     }else{
+//         console.log(obj);
+//         weatherApi.getWeatherFromLocation(obj.location,(err,data)=>{
+//             if(err){
+//                 console.log(err);
+//             }else{
+//                 console.log(data);
+//             }
+//         });
+//     }
+// });
 
+
+googleMapApi.geoCodeAddressPromise(argv.address).then((data)=>{
+    console.log(data);
+    return weatherApi.getWeatherFromLocationPromise(data.location);
+}).then((weatherObj)=>{
+    console.log(weatherObj);
+}).catch(err=>{
+    console.log(err);
+});
 // bash-3.2$ node weatherApp/app.js -a beijing
 // Address : Beijing, China
 // Lat:39.904211,Lng:116.407395
