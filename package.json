@@ -1,0 +1,24 @@
+{
+  "name": "Node-Training-Projects",
+  "version": "1.0.0",
+  "description": "内容来自于Udemy上的课程&lt;The Complete Nodejs Developer Course 2.0>",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhangmingkai4315/Node-Training-Projects.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zhangmingkai4315/Node-Training-Projects/issues"
+  },
+  "homepage": "https://github.com/zhangmingkai4315/Node-Training-Projects#readme",
+  "dependencies": {
+    "lodash": "^4.17.4",
+    "yargs": "^6.6.0"
+  }
+}

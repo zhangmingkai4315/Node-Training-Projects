@@ -1,0 +1,10 @@
+[
+  {
+    "title": "first notes",
+    "body": "javascript is asesome"
+  },
+  {
+    "title": "seconds notes",
+    "body": "javascript is asesome"
+  }
+]
