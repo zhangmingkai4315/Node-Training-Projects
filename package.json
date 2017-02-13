@@ -4,7 +4,9 @@
   "description": "内容来自于Udemy上的课程&lt;The Complete Nodejs Developer Course 2.0>",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha ./test_training --recursive -R spec",
+    "test-watch": "nodemon --exec 'npm test'",
+    "test-mocha-watch": "mocha ./test_training --recursive --watch"
   },
   "repository": {
     "type": "git",
@@ -18,8 +20,16 @@
   },
   "homepage": "https://github.com/zhangmingkai4315/Node-Training-Projects#readme",
   "dependencies": {
+    "express": "^4.14.1",
     "lodash": "^4.17.4",
     "request": "^2.79.0",
     "yargs": "^6.6.0"
+  },
+  "devDependencies": {
+    "expect": "^1.20.2",
+    "mocha": "^3.2.0",
+    "rewire": "^2.5.2",
+    "supertest": "^3.0.0",
+    "tap": "^10.1.0"
   }
 }
