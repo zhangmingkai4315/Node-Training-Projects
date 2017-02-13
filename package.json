@@ -4,7 +4,7 @@
   "description": "内容来自于Udemy上的课程&lt;The Complete Nodejs Developer Course 2.0>",
   "main": "index.js",
   "scripts": {
-    "test": "mocha ./test_training --recursive -R spec",
+    "test": "mocha ./mongodb-app/test --recursive -R spec",
     "test-watch": "nodemon --exec 'npm test'",
     "test-mocha-watch": "mocha ./test_training --recursive --watch"
   },
@@ -20,8 +20,11 @@
   },
   "homepage": "https://github.com/zhangmingkai4315/Node-Training-Projects#readme",
   "dependencies": {
+    "body-parser": "^1.16.1",
     "express": "^4.14.1",
     "lodash": "^4.17.4",
+    "mongodb": "^2.2.22",
+    "mongoose": "^4.8.2",
     "request": "^2.79.0",
     "yargs": "^6.6.0"
   },
