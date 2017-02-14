@@ -12,7 +12,8 @@ describe('Post /todos' ,()=>{
     it('should return a new todo',(done)=>{
         let text = 'new text todo'
         request(app).post('/todos')
-                    .send({text})
+                    .set('x-auth',users[0].tokens[0].token)
+                    .send({text,_creator:users[0]._id})
                     .expect(200)
                     .end((err,res)=>{
                             expect(res.body.text).toBe(text);
@@ -27,6 +28,7 @@ describe('Post /todos' ,()=>{
     it('should not create a new todo without valide data',(done)=>{
         let text = ''
         request(app).post('/todos')
+                    .set('x-auth',users[0].tokens[0].token)
                     .send({text})
                     .expect(400)
                     .end((err,res)=>{
@@ -42,6 +44,7 @@ describe('Post /todos' ,()=>{
 describe('Get /todos' ,()=>{
     it('should return a todo list',(done)=>{
         request(app).get('/todos')
+                    .set('x-auth',users[0].tokens[0].token)
                     .expect(200)
                     .end((err,res)=>{
                             expect(res.body.todos.length).toBe(3);
@@ -52,15 +55,20 @@ describe('Get /todos' ,()=>{
   it('should return a new todo array with some todo item',(done)=>{
         let text = 'text todo'
         request(app).post('/todos')
+                     .set('x-auth',users[0].tokens[0].token)
                     .send({text})
                     .expect(200)
                     .end((err,res)=>{
+                
                             expect(res.body.text).toBe(text);
+
                             Todo.find().then((todos)=>{
                             expect(todos.length).toBe(4);
                             request(app).get('/todos')
+                             .set('x-auth',users[0].tokens[0].token)
                             .expect(200)
                             .end((err,res)=>{
+                                   
                                     expect(res.body.todos.length).toBe(4);
                                     done();
                             });
@@ -75,6 +83,7 @@ describe('Get /todos/:id' ,()=>{
     it('should return a new todo',(done)=>{
         let todo = todos[0]
         request(app).get(`/todos/${todo._id.toHexString()}`)
+            .set('x-auth',users[0].tokens[0].token)
             .expect(200)
             .end((err,res)=>{
                 expect(res.body.todo[0]['text']).toBe(todo.text);
@@ -88,15 +97,17 @@ describe('Delete /todo/:id' ,()=>{
     it('should delete a new todo',(done)=>{
         let todo = todos[0]
         request(app).delete(`/todos/${todo._id.toHexString()}`)
+            .set('x-auth',users[0].tokens[0].token)
             .expect(200)
             .end((err,res)=>{
-                    expect(res.body.success).toBe(true);
+                    expect(res.body.error).toNotExist();
                     done();
         });                 
     });
      it('should delete nothing',(done)=>{
          let id = '58a2a652174d5b761ab053cf';
          request(app).delete(`/todos/${id}`)
+                                .set('x-auth',users[0].tokens[0].token)
                                 .expect(404)
                                 .end((err,res)=>{
                                     // expect(res.body).toBe(null);
@@ -110,6 +121,7 @@ describe('Patch /todo/:id' ,()=>{
     it('should update a todo',(done)=>{
     let todo = todos[0]
     request(app).patch(`/todos/${todo._id.toHexString()}`)
+        .set('x-auth',users[0].tokens[0].token)
         .send({completed:true})
         .expect(200)
         .end((err,res)=>{

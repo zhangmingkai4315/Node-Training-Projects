@@ -1,15 +1,5 @@
-const env = process.env.NODE_ENV||'development';
-if(env === 'development'){
-    process.env.PORT = 3000;
-    process.env.MONGODB_URL = 'mongodb://localhost:27017/TodoAppDev';
-}else if (env === 'test'){
-    process.env.PORT = 3000;
-    process.env.MONGODB_URL = 'mongodb://localhost:27017/TodoAppTest';
-}else if(env === 'production'){
-    process.env.PORT = 80;
-    process.env.MONGODB_URL = 'mongodb://localhost:27017/TodoApp';
-}
 
+const config = require('./config.js');
 const express = require('express');
 const bodyParser = require('body-parser');
 const { ObjectID } =require('mongodb');
@@ -22,9 +12,12 @@ const app = express();
 
 app.use(bodyParser.json());
 
-app.post('/todos',(req,res)=>{
+app.post('/todos',authMiddleware,(req,res)=>{
     if(req.body){
-        let todo = new Todo(req.body)
+        let todo = new Todo({
+            text:req.body.text,
+            _creator:req.user._id
+        });
         todo.save().then((data)=>{
             res.status(200).send(data);
         },(err)=>{
@@ -37,8 +30,10 @@ app.post('/todos',(req,res)=>{
 
 
 
-app.get('/todos',(req,res)=>{
-    Todo.find({}).then((data)=>{
+app.get('/todos',authMiddleware,(req,res)=>{
+    Todo.find({
+        _creator:req.user._id
+    }).then((data)=>{
         res.status(200).json({
             todos:data
         })
@@ -49,13 +44,13 @@ app.get('/todos',(req,res)=>{
     });
 });
 
-app.get('/todos/:id',(req,res)=>{
+app.get('/todos/:id',authMiddleware,(req,res)=>{
     let id = req.params.id;
     if(!ObjectID.isValid(id)){
         res.status(400);
         return
     }
-    Todo.find({_id:ObjectID(id)}).then((data)=>{
+    Todo.find({_id:ObjectID(id), _creator:req.user._id}).then((data)=>{
         res.status(200).json({
             todo:data
         });
@@ -66,7 +61,7 @@ app.get('/todos/:id',(req,res)=>{
     });
 });
 
-app.delete('/todos/:id',(req,res)=>{
+app.delete('/todos/:id',authMiddleware,(req,res)=>{
     let id = req.params.id;
     if(!ObjectID.isValid(id)){
         res.status(400);
@@ -76,6 +71,10 @@ app.delete('/todos/:id',(req,res)=>{
         if(!todo){
             res.status(404).json({
                     error:'NotFound',id  
+            });
+        }else if(todo._creator.toHexString()!==req.user._id.toHexString()){
+             res.status(401).json({
+                    error:'NotAllowed',id  
             });
         }else{
             res.status(200).json({
@@ -94,7 +93,7 @@ app.delete('/todos/:id',(req,res)=>{
     });
 });
 
-app.patch('/todos/:id',(req,res)=>{
+app.patch('/todos/:id',authMiddleware,(req,res)=>{
     let id = req.params.id;
     let body = _.pick(req.body,['text','completed']);
 
@@ -187,7 +186,7 @@ app.get('/users/me',authMiddleware,(req,res)=>{
 
 app.delete('/users/me/token',authMiddleware,(req,res)=>{
     req.user.removeToken(req.token).then(()=>{
-        res.status(200).send();
+        res.header('x-auth','').send();
     }).catch(e=>{
         res.status(400).send();
     });
