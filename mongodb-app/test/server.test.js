@@ -69,10 +69,36 @@ describe('Get /todos' ,()=>{
                                     expect(res.body.todos[0].text).toBe(text);
                                     done();
                             });
-                            
                         });
                     
         });
     });
 
+});
+
+
+describe('Get /todo/:id' ,()=>{
+    it('should return a new todo',(done)=>{
+        let text = 'text todo'
+        request(app).post('/todos')
+                    .send({text})
+                    .expect(200)
+                    .end((err,res)=>{
+                            expect(res.body.text).toBe(text);
+                            Todo.find().then((todos)=>{
+                            expect(todos.length).toBe(1);
+                            expect(todos[0].text).toBe(text);
+                            let id = todos[0]['_id'];
+                            request(app).get(`/todo/${id}`)
+                                .expect(200)
+                                .end((err,res)=>{
+                  
+                                    expect(res.body.todo[0]['text']).toBe(text);
+                                    done();
+                                });
+                            
+                             });
+                        });
+                    
+        });
 });
