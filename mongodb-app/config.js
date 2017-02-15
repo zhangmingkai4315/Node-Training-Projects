@@ -14,6 +14,6 @@ Object.keys(require('./config/base.json')).forEach(key=>{
 const config = {
     envconfig:envConfigObj,
     baseconfig
-}
+} 
 module.exports=config;
 

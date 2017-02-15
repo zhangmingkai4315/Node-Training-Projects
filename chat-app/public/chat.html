@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>聊天室</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="css/style.css" rel="stylesheet">
+    </head>
+    <body class="chat"> 
+      <div class="chat-sidebar">
+          <h3>用户列表</h3>
+          <div class = "users">
+              
+          </div>
+      </div>
+      <div class="chat-main">
+            <ol id="messages" class="chat-messages">
+            </ol>
+            <div class="chat-footer">
+                <form id="message-form">
+                    <input type="text" name="message" placeholder="输入信息" autofocus autocomplete="off"/>
+                    <button type="submit">发送消息</button>
+                    <button id="send-location-btn">发送我的位置</button>
+                </form>
+            </div>
+
+      </div>
+
+      <script id='message-template'  type="text/template">
+        <li class="message">
+            <div class="message-title">
+                <h4>{{user}}</h4>
+                <span>{{time}}</span>
+            </div>
+            <div class="message-body">
+                <p>{{text}}</p>
+            </div>
+        </li>
+      </script>
+
+      <script id='location-template'  type="text/template">
+        <li class="message">
+            <div class="message-title">
+                <h4>{{user}}</h4>
+                <span>{{time}}</span>
+            </div>
+            <div class="message-body">
+                <p><a href={{url}} target="_blank">位置信息</a></p>
+            </div>
+        </li>
+      </script>
+
+
+     <script id='system-info-template'  type="text/template">
+            <li class="message">
+                <div class="system-message">
+                    <span>{{text}}</span>
+                </div>
+            </li>
+      </script>
+
+      <script src = "/lib/jquery/dist/jquery.min.js">
+      </script>
+      <script src = "/lib/moment/moment.js">
+      </script>
+      <script src = "/lib/mustache/mustache.min.js">
+      </script>
+      <script src = "/socket.io/socket.io.js"></script>
+      <script src = "/js/utils.js"></script>
+      <script src = "/js/main.js"></script>
+    </body>
+</html>
